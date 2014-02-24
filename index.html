@@ -26,59 +26,11 @@
         <p id="authentication_error" style="display: none;">
             There was a problem authenticating the user, please try again later.
         </p>
-  </form>
-  <script src="js/jquery.js"></script>
+    </form>
+    <script src="js/jquery.js"></script>
 
-  <!-- Inline Javascript is impossible to test from an external test harness -->
-  <script>
-
-    // Even if test harness was included in the HTML, Javascript is
-    // inaccessible to tests
-    $(function() {
-
-        // Pyramid of doom - A mixture of disparate concerns and
-        // very difficult to test individual parts
-        $("#authentication_form").on("submit", function(event) {
-
-            // Event handler logic is mixed with form handling logic
-            event.preventDefault();
-
-            var username = $("#username").val();
-            var password = $("#password").val();
-
-            if (username && password) {
-
-                // Without a mock, XHR requests require a functioning
-                // back end, adding extra dependencies and delay
-                $.ajax({
-                    type: "POST",
-                    url: "/authenticate_user",
-                    data: {
-                        username: username,
-                        password: password
-                    },
-                    success: function(data, status, jqXHR) {
-
-                        // Knowing when this completes requires some sort
-                        // of notification
-                        if (data.success) {
-                            $("#authentication_success").show();
-                        }
-                        else {
-                            $("#authentication_failure").show();
-                        }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        $("#authentication_error").show();
-                    }
-                });
-            }
-            else {
-                $("#username_password_required").show();
-            }
-        });
-    });
-
-    </script>
+    <!-- Both the authentication form and the initialization code are split into their own files. Javascript resources can be combined for production use. -->
+    <script src="js/authentication-form.js"></script>
+    <script src="js/start.js"></script>
 </body>
 </html>
